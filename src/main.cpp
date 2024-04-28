@@ -5,12 +5,10 @@
 ** main
 */
 
-#include "../include/main.hpp"
+#include "../include/Core.hpp"
+#include "../include/Math.hpp"
 
-int raytracer(void)
-{
-    return (0);
-}
+using namespace libconfig;
 
 void print_help(char **av)
 {
@@ -18,8 +16,6 @@ void print_help(char **av)
         std::cout << "USAGE: ./raytracer <SCENE_FILE>" << std::endl;
         std::cout << "  SCENE_FILE: scene configuration" << std::endl;
         exit (0);
-    } else {
-        raytracer();
     }
 }
 
@@ -29,5 +25,6 @@ int main(int ac, char **av)
         return (84);
     }
     print_help(av);
+    raytracer(av);
     return (0);
 }

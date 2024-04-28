@@ -5,20 +5,17 @@
 ## Makefile
 ##
 
-SRC	=	./src/main.cpp\
-
 NAME	=	raytracer
 
 all:	$(NAME)
 
 $(NAME):	$(SRC)
-	g++ -o $(NAME) $(SRC) -g3
+	@g++ -o $(NAME) src/*.cpp src/Math/*.cpp -g3 -lconfig++
 
 clean:
-	rm -f $(NAME)
+	@rm -f $(NAME)
 
-fclean:
-	rm -f $(NAME)
-	make clean
+fclean: clean
+	@rm -f $(NAME)
 
 re: fclean all
