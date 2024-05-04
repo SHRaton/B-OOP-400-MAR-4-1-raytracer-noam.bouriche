@@ -21,7 +21,7 @@ void print_help(char **av)
 
 int main(int ac, char **av)
 {
-    if (ac != 2){
+    if (ac > 3 || ac == 1) {
         return (84);
     }
     print_help(av);

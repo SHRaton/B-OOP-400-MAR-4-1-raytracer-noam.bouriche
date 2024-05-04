@@ -23,9 +23,7 @@ Point3d::Point3d()
     _Z = 0;
 }
 
-Vector3d::Vector3d()
+void Point3d::print()
 {
-    _X = 0;
-    _Y = 0;
-    _Z = 0;
+    std::cout << "(x= '" << _X << "' y= '" << _Y << "' z= '" << _Z << "')" << std::endl;
 }

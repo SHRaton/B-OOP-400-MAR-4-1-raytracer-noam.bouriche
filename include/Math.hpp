@@ -26,6 +26,7 @@ namespace Math {
         double _Z;
         double lenght();
         double dot(const Vector3d& vec) const;
+        void print();
         Vector3d operator+(const Vector3d& v) const {
             return Vector3d(_X + v._X, _Y + v._Y, _Z + v._Z);
         }
@@ -90,6 +91,7 @@ namespace Math {
         double _X;
         double _Y;
         double _Z;
+        void print();
         Point3d operator+(const Vector3d& v) const {
             return Point3d(_X + v._X, _Y + v._Y, _Z + v._Z);
         }
@@ -122,10 +124,29 @@ namespace Raytracer {
         public :
         Sphere() = default;
         ~Sphere() = default;
-        Sphere(Point3d center, double radius);
+        Sphere(Point3d center, double radius, std::string color);
         bool hit(const Raytracer::Ray& ray);
+        std::string get_color();
+        double get_lenght();
+
         Point3d _center;
         double _radius;
+        std::string _color;
+        double _lenght;
+    };
+    class Plan : public IShape {
+        public:
+        Plan() = default;
+        ~Plan() = default;
+        Plan(std::string axis, double pos, std::string color);
+        bool hit(const Raytracer::Ray& ray);
+        std::string get_color();
+        double get_lenght();
+
+        std::string _axis;
+        double _pos;
+        std::string _color;
+        double _lenght;
     };
     class Rectangle {
         public :
@@ -140,13 +161,14 @@ namespace Raytracer {
     class Camera {
         public :
         Camera();
-        Camera(Point3d origin, Rectangle screen, double screen_size_x, double screen_size_y);
+        Camera(Point3d origin, Rectangle screen, double screen_size_x, double screen_size_y, double fov);
         ~Camera() = default;
         Point3d _origin;
         Rectangle _screen;
         double _screen_size_x;
         double _screen_size_y;
         double _ratio;
+        double _fov;
         Ray ray(double u, double v) const;
     };
 };

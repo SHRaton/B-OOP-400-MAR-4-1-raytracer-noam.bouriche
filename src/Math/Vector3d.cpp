@@ -9,6 +9,13 @@
 
 using namespace Math;
 
+Vector3d::Vector3d()
+{
+    _X = 0;
+    _Y = 0;
+    _Z = 0;
+}
+
 Vector3d::Vector3d(double x, double y, double z)
 {
     _X = x;
@@ -24,4 +31,9 @@ double Vector3d::lenght()
 double Vector3d::dot(const Vector3d& vec) const
 {
     return _X * vec._X + _Y * vec._Y + _Z * vec._Z;
+}
+
+void Vector3d::print()
+{
+    std::cout << "(x= '" << _X << "' y= '" << _Y << "' z= '" << _Z << "')" << std::endl;
 }

@@ -8,19 +8,25 @@
 #include "../include/Core.hpp"
 #include "../include/Math.hpp"
 
-Core::Core()
-{
-}
+using namespace std;
+using namespace Math;
+using namespace Raytracer;
 
-Core::~Core()
+void Core::getFileName(const std::string& filePath)
 {
+    size_t lastSlashIndex = filePath.find_last_of('/');
+    std::string fileNameWithExtension = filePath.substr(lastSlashIndex + 1);
+    size_t lastDotIndex = fileNameWithExtension.find_last_of('.');
+    std::string fileNameWithoutExtension = fileNameWithExtension.substr(0, lastDotIndex);
+    std::string fileNameWithPPM = "renders/" + fileNameWithoutExtension + ".ppm";
+    fileName = fileNameWithPPM;
 }
 
 void Core::loadfile(std::string str)
 {
     try
     {
-        cfg.readFile("scenes/basic.cfg");
+        cfg.readFile(str);
     }
     catch(const FileIOException &fioex)
     {
@@ -35,15 +41,52 @@ void Core::loadfile(std::string str)
     root = &cfg.getRoot();
 }
 
-void Core::parse_all()
+Raytracer::Rectangle Core::get_cam_from_dir(Point3d origin, double ratio, std::string dir, double fov)
 {
-    int x, y;
-    (*root)["camera"]["resolution"].lookupValue("width", x);
-    (*root)["camera"]["resolution"].lookupValue("height", y);
-    std::pair<int, int> res = {x, y};
-    resolution = res;
+    Point3d x_plus(1, ratio, -1);
+    Vector3d x_plus_bot(0, 0, 2);
+    Vector3d x_plus_left(0, -2*ratio, 0);
+    Point3d x_moins(-1, -ratio, -1);
+    Vector3d x_moins_bot(0, 0, 2);
+    Vector3d x_moins_left(0, 2*ratio, 0);
 
+    Point3d y_plus(-ratio, 1, -1);
+    Vector3d y_plus_bot(0, 0, 2);
+    Vector3d y_plus_left(2*ratio, 0, 0);
+    Point3d y_moins(ratio, -1, -1);
+    Vector3d y_moins_bot(0, 0, 2);
+    Vector3d y_moins_left(-2*ratio, 0, 0);
 
-    auto s = std::make_unique<Raytracer::Sphere>(Math::Point3d(60, 5, 50), 25);
-    primitives.push_back(std::move(s));
+    Point3d z_plus(-1, -ratio, 1);
+    Vector3d z_plus_bot(2, 0, 0);
+    Vector3d z_plus_left(0, 2*ratio, 0);
+    Point3d z_moins(-1, -ratio, -1);
+    Vector3d z_moins_bot(2, 0, 0);
+    Vector3d z_moins_left(0, 2*ratio, 0);
+
+    if (dir == "+x") {
+        origin._X += fov;
+        return (Raytracer::Rectangle(x_plus + origin, x_plus_bot, x_plus_left));
+    }
+    if (dir == "-x") {
+        origin._X -= fov;
+        return (Raytracer::Rectangle(x_moins + origin, x_moins_bot, x_moins_left));
+    }
+    if (dir == "+y") {
+        origin._Y += fov;
+        return (Raytracer::Rectangle(y_plus + origin, y_plus_bot, y_plus_left));
+    }
+    if (dir == "-y") {
+        origin._Y -= fov;
+        return (Raytracer::Rectangle(y_moins + origin, y_moins_bot, y_moins_left));
+    }
+    if (dir == "+z") {
+        origin._Z += fov;
+        return (Raytracer::Rectangle(z_plus + origin, z_plus_bot, z_plus_left));
+    }
+    if (dir == "-z") {
+        origin._Z -= fov;
+        return (Raytracer::Rectangle(z_moins + origin, z_moins_bot, z_moins_left));
+    }
+    return (Raytracer::Rectangle(z_moins + origin, z_moins_bot, z_moins_left));
 }

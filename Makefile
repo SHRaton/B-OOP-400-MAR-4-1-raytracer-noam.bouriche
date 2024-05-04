@@ -9,8 +9,10 @@ NAME	=	raytracer
 
 all:	$(NAME)
 
+FLAGS = -g3 -lconfig++ -lsfml-graphics -lsfml-window -lsfml-system
+
 $(NAME):	$(SRC)
-	@g++ -o $(NAME) src/*.cpp src/Math/*.cpp -g3 -lconfig++
+	@g++ -o $(NAME) src/*.cpp src/Math/*.cpp $(FLAGS)
 
 clean:
 	@rm -f $(NAME)

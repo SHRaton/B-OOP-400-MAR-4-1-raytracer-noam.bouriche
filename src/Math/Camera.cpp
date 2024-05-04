@@ -22,13 +22,14 @@ Raytracer::Camera::Camera()
     //printf("_origin = %f %f %f / _bottom_side = %f %f %f / _left_side = %f %f %f\n", _origin._X, _origin._Y, _origin._Z, _screen._bottom_side._X, _screen._bottom_side._Y, _screen._bottom_side._Z, _screen._left_side._X, _screen._left_side._Y, _screen._left_side._Z);
 }
 
-Raytracer::Camera::Camera(Point3d origin, Rectangle screen, double screen_size_x, double screen_size_y)
+Raytracer::Camera::Camera(Point3d origin, Rectangle screen, double screen_size_x, double screen_size_y, double fov)
 {
     _origin = origin;
     _screen = screen;
     _screen_size_x = screen_size_x;
     _screen_size_y = screen_size_y;
     _ratio = _screen_size_x / _screen_size_y;
+    _fov = fov;
 }
 
 Raytracer::Ray Raytracer::Camera::ray(double u, double v) const

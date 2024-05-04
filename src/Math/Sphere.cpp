@@ -9,10 +9,11 @@
 
 using namespace Math;
 
-Raytracer::Sphere::Sphere(Point3d center, double radius)
+Raytracer::Sphere::Sphere(Point3d center, double radius, std::string color)
 {
     _center = center;
     _radius = radius;
+    _color = color;
 }
 
 bool Raytracer::Sphere::hit(const Raytracer::Ray& ray)
@@ -27,9 +28,31 @@ bool Raytracer::Sphere::hit(const Raytracer::Ray& ray)
 
     double discriminant = b * b - 4.0 * a * c;
 
+
+
     if (discriminant >= 0 && b < 0) {
+        double t1 = (-b + sqrt(discriminant)) / (2.0 * a);
+        double t2 = (-b - sqrt(discriminant)) / (2.0 * a);
+        //std::cout << "t1= " << t1 << " / t2= " << t2 << std::endl;
+        double t3;
+        if (t1 < t2) {
+            t3 = t1;
+        } else {
+            t3 = t2;
+        }
+        _lenght = t3;
         return true;
     } else {
         return false;
     }
+}
+
+double Raytracer::Sphere::get_lenght()
+{
+    return (_lenght);
+}
+
+std::string Raytracer::Sphere::get_color()
+{
+    return (_color);
 }
