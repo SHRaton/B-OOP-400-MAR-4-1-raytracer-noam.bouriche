@@ -25,3 +25,13 @@ void raytracer(char **av)
         core.display_g();
     }
 }
+
+void raytracer_g(std::string path)
+{
+    Core core;
+    core.loadfile(path);
+    core.parse_all();
+
+    core.getFileName(path);
+    core.draw_render_ppm(core.fileName);
+}

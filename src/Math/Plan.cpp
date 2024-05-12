@@ -14,6 +14,9 @@ Raytracer::Plan::Plan(std::string axis, double pos, std::string color)
     _axis = axis;
     _pos = pos;
     _color = color;
+    _lenght = 0;
+    _impact_point = Point3d(0, 0, 0);
+    _normal = Vector3d(0, 0, 0);
 }
 
 bool Raytracer::Plan::hit(const Raytracer::Ray& ray)
@@ -46,12 +49,46 @@ bool Raytracer::Plan::hit(const Raytracer::Ray& ray)
         return false;
     }
     _lenght = t;
+    _impact_point = ray._origin + (ray._direction * t);
+    if (_axis == "X") {
+        _normal = Vector3d(1, 0, 0);
+    }
+    if (_axis == "Y") {
+        _normal = Vector3d(0, 1, 0);
+    }
+    if (_axis == "Z") {
+        _normal = Vector3d(0, 0, 1);
+    }
     return true;
+}
+
+bool Raytracer::Plan::contains_point(Point3d p)
+{
+    if (_axis == "X" && std::abs(p._X - _pos) < 0.0001) {
+        return true;
+    }
+    if (_axis == "Y" && std::abs(p._Y - _pos) < 0.0001) {
+        return true;
+    }
+    if (_axis == "Z" && std::abs(p._Z - _pos) < 0.0001) {
+        return true;
+    }
+    return false;
 }
 
 double Raytracer::Plan::get_lenght()
 {
     return (_lenght);
+}
+
+Point3d Raytracer::Plan::get_impact_point()
+{
+    return (_impact_point);
+}
+
+Vector3d Raytracer::Plan::get_normal()
+{
+    return (_normal);
 }
 
 std::string Raytracer::Plan::get_color()

@@ -33,7 +33,25 @@ double Vector3d::dot(const Vector3d& vec) const
     return _X * vec._X + _Y * vec._Y + _Z * vec._Z;
 }
 
+void Vector3d::vector_from_two_point(Point3d p1, Point3d p2)
+{
+    _X = p1._X - p2._X;
+    _Y = p1._Y - p2._Y;
+    _Z = p1._Z - p2._Z;
+}
+
 void Vector3d::print()
 {
     std::cout << "(x= '" << _X << "' y= '" << _Y << "' z= '" << _Z << "')" << std::endl;
+}
+
+void Vector3d::normalize()
+{
+    double length = std::sqrt((_X * _X) + (_Y * _Y) + (_Z * _Z));
+
+    if (length != 0.0) {
+        _X /= length;
+        _Y /= length;
+        _Z /= length;
+    }
 }

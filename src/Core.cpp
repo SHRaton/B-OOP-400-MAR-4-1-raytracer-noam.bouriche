@@ -90,3 +90,25 @@ Raytracer::Rectangle Core::get_cam_from_dir(Point3d origin, double ratio, std::s
     }
     return (Raytracer::Rectangle(z_moins + origin, z_moins_bot, z_moins_left));
 }
+
+std::string Core::color_from_vector(Vector3d vec)
+{
+    int r = std::round(vec._X);
+    int g = std::round(vec._Y);
+    int b = std::round(vec._Z);
+
+    std::ostringstream oss;
+    oss << r << " " << g << " " << b << "\n";
+    return oss.str();
+}
+
+Vector3d Core::vector_from_color(std::string color)
+{
+    std::istringstream iss(color);
+    int r, g, b;
+    char delimiter;
+
+    iss >> r >> g >> b >> delimiter;
+    Vector3d color_vector(r, g, b);
+    return color_vector;
+}

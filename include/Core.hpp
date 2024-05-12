@@ -15,6 +15,7 @@
 #include <memory>
 #include <utility>
 #include <limits>
+#include <sstream>
 #include "Math.hpp"
 
 using namespace libconfig;
@@ -33,6 +34,9 @@ class Core {
         void parse_all();
         void parse_camera();
         void parse_primitives();
+        std::string shadow_gestion(int i);
+        std::string color_from_vector(Vector3d color);
+        Vector3d vector_from_color(std::string color);
         Config cfg;
         Setting *root;
         std::string fileName;
@@ -50,3 +54,4 @@ class Core {
 };
 
 void raytracer(char **av);
+void raytracer_g(std::string path);

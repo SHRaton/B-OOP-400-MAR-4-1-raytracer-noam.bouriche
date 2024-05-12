@@ -26,7 +26,9 @@ namespace Math {
         double _Z;
         double lenght();
         double dot(const Vector3d& vec) const;
+        void vector_from_two_point(Point3d p1, Point3d p2);
         void print();
+        void normalize();
         Vector3d operator+(const Vector3d& v) const {
             return Vector3d(_X + v._X, _Y + v._Y, _Z + v._Z);
         }
@@ -128,11 +130,16 @@ namespace Raytracer {
         bool hit(const Raytracer::Ray& ray);
         std::string get_color();
         double get_lenght();
+        Point3d get_impact_point();
+        Vector3d get_normal();
+        bool contains_point(Point3d p);
 
         Point3d _center;
         double _radius;
         std::string _color;
         double _lenght;
+        Point3d _impact_point;
+        Vector3d _normal;
     };
     class Plan : public IShape {
         public:
@@ -142,11 +149,16 @@ namespace Raytracer {
         bool hit(const Raytracer::Ray& ray);
         std::string get_color();
         double get_lenght();
+        Point3d get_impact_point();
+        Vector3d get_normal();
+        bool contains_point(Point3d p);
 
         std::string _axis;
         double _pos;
         std::string _color;
         double _lenght;
+        Point3d _impact_point;
+        Vector3d _normal;
     };
     class Rectangle {
         public :

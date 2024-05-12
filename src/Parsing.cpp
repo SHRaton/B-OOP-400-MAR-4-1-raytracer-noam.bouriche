@@ -12,6 +12,15 @@ using namespace std;
 using namespace Math;
 using namespace Raytracer;
 
+double calculate_coefficient(float fov_degrees)
+{
+    double fov_radians = fov_degrees * M_PI / 180.0;
+    double tan_half_fov = tanf(fov_radians / 2.0);
+    double coefficient = 1.0 / (2.0 * tan_half_fov);
+
+    return coefficient;
+}
+
 void Core::parse_camera()
 {
     int res_x, res_y;
@@ -32,7 +41,7 @@ void Core::parse_camera()
     double a = _camera_resolution.first;
     double b = _camera_resolution.second;
     double ratio = a / b;
-    double fov_ratio = _camera_fov / 100;
+    double fov_ratio = calculate_coefficient(_camera_fov);
     std::string dir;
     (*root)["camera"].lookupValue("direction", dir);
     _camera_rect = get_cam_from_dir(_camera_origin, ratio, dir, fov_ratio);
