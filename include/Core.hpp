@@ -51,6 +51,9 @@ class Core {
 
         // Primitives
         std::vector<std::unique_ptr<IShape>> _primitives;
+
+        // Lights
+        std::vector<std::unique_ptr<ILight>> _lights;
 };
 
 void raytracer(char **av);

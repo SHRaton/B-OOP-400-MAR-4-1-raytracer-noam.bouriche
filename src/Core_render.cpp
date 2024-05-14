@@ -39,8 +39,7 @@ std::string Core::shadow_gestion(int i)
 Vector3d compute_lambert_shading(const Vector3d& normal, const Vector3d& light_direction, const Vector3d& diffuse_color)
 {
     double diffuse_intensity = std::max(0.0, normal.dot(light_direction));
-    std::cout << normal.dot(light_direction) << std::endl;
-    std::cout << diffuse_intensity << std::endl;
+    diffuse_intensity = diffuse_intensity * (1.0 * 0.5) + 0.5;
     return diffuse_color * diffuse_intensity;
 }
 
@@ -60,22 +59,28 @@ std::string Core::add_pixel_color(Ray r)
         }
     }
     Vector3d color;
-    Vector3d ambient_light(1, 1, 1);
+    Vector3d ambient_light(0.8, 0.8, 0.8);
     Vector3d shading_color;
     Vector3d normal;
+    Point3d impact;
+    Vector3d light_direction;
     if (closest_primitive_index != -1) {
         shadow = shadow_gestion(closest_primitive_index);
         if (shadow != "nothing") {
             color = darken_color(vector_from_color(_primitives[closest_primitive_index]->get_color()), 0.5);
         } else {
             color = vector_from_color(_primitives[closest_primitive_index]->get_color());
-
+            normal = _primitives[closest_primitive_index]->get_normal();
+            impact = _primitives[closest_primitive_index]->get_impact_point();
+            light_direction.vector_from_two_point(Point3d(400, 100, 500), impact);
+            light_direction.normalize();
+            shading_color = compute_lambert_shading(normal, light_direction, vector_from_color(_primitives[closest_primitive_index]->get_color()));
+            color = shading_color;
         }
     } else {
         color = Vector3d(0, 0, 0);
     }
     color *= ambient_light;
-    //color += shading_color;
     return color_from_vector(color);
 }
 

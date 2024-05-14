@@ -43,7 +43,8 @@ bool Raytracer::Sphere::hit(const Raytracer::Ray& ray)
         }
         _lenght = t3;
         _impact_point = ray._origin + (ray._direction * t3);
-        _normal = Vector3d(0, 0, 0);
+        _normal.vector_from_two_point(_impact_point, _center);
+        _normal.normalize();
         return true;
     } else {
         return false;
