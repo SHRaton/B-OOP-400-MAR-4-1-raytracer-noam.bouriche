@@ -12,6 +12,7 @@
 #include <fstream>
 #include <vector>
 #include "IShape.hpp"
+#include "ILight.hpp"
 
 using namespace std;
 
@@ -182,5 +183,21 @@ namespace Raytracer {
         double _ratio;
         double _fov;
         Ray ray(double u, double v) const;
+    };
+    class PointLight : public ILight {
+        public :
+        PointLight();
+        ~PointLight() = default;
+        PointLight(Point3d coo);
+        std::string get_name();
+        std::string get_color();
+        Point3d get_position();
+        Vector3d get_direction();
+
+        std::string _name;
+        std::string _color;
+        Point3d _coo;
+        Vector3d _direction;
+
     };
 };

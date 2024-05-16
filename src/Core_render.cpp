@@ -22,15 +22,15 @@ Vector3d darken_color(const Vector3d& color, double factor)
     return Vector3d(r, g, b);
 }
 
-std::string Core::shadow_gestion(int i)
+std::string Core::shadow_gestion(int closest_primitive, size_t i)
 {
-    Point3d impact = _primitives[i]->get_impact_point();
+    Point3d impact = _primitives[closest_primitive]->get_impact_point();
     Vector3d light_direction;
-    light_direction.vector_from_two_point(Point3d(400, 100, 500), impact);
+    light_direction.vector_from_two_point(_lights[i]->get_position(), impact);
     Raytracer::Ray r_light(impact + (light_direction * 0.0001), light_direction);
     for (size_t z = 0; z < _primitives.size(); ++z) {
         if (_primitives[z]->hit(r_light)) {
-            return("shadow\n");
+            return("shadow");
         }
     }
     return ("nothing");
@@ -45,9 +45,16 @@ Vector3d compute_lambert_shading(const Vector3d& normal, const Vector3d& light_d
 
 std::string Core::add_pixel_color(Ray r)
 {
+    Vector3d color;
     double min_distance = std::numeric_limits<double>::infinity();
     int closest_primitive_index = -1;
     std::string shadow;
+
+    Vector3d ambient_light(ambiant_light, ambiant_light, ambiant_light);
+    Vector3d shading_color;
+    Vector3d normal;
+    Point3d impact;
+    Vector3d light_direction;
 
     for (size_t i = 0; i < _primitives.size(); ++i) {
         if (_primitives[i]->hit(r)) {
@@ -58,24 +65,28 @@ std::string Core::add_pixel_color(Ray r)
             }
         }
     }
-    Vector3d color;
-    Vector3d ambient_light(0.8, 0.8, 0.8);
-    Vector3d shading_color;
-    Vector3d normal;
-    Point3d impact;
-    Vector3d light_direction;
+    int light = 0;
+    int dark = 0;
+    Vector3d base_color;
     if (closest_primitive_index != -1) {
-        shadow = shadow_gestion(closest_primitive_index);
-        if (shadow != "nothing") {
-            color = darken_color(vector_from_color(_primitives[closest_primitive_index]->get_color()), 0.5);
-        } else {
-            color = vector_from_color(_primitives[closest_primitive_index]->get_color());
-            normal = _primitives[closest_primitive_index]->get_normal();
-            impact = _primitives[closest_primitive_index]->get_impact_point();
-            light_direction.vector_from_two_point(Point3d(400, 100, 500), impact);
-            light_direction.normalize();
-            shading_color = compute_lambert_shading(normal, light_direction, vector_from_color(_primitives[closest_primitive_index]->get_color()));
-            color = shading_color;
+        base_color = vector_from_color(_primitives[closest_primitive_index]->get_color());
+        for (size_t i = 0; i < _lights.size(); ++i) {
+            shadow = shadow_gestion(closest_primitive_index, i);
+            if (shadow == "shadow") {
+                color = darken_color(base_color, 0.5);
+                dark = 1;
+                //break;
+            }
+            if (shadow == "nothing" && dark == 0) {
+                color = vector_from_color(_primitives[closest_primitive_index]->get_color());
+                normal = _primitives[closest_primitive_index]->get_normal();
+                impact = _primitives[closest_primitive_index]->get_impact_point();
+                light_direction.vector_from_two_point(_lights[i]->get_position(), impact);
+                light_direction.normalize();
+                shading_color = compute_lambert_shading(normal, light_direction, vector_from_color(_primitives[closest_primitive_index]->get_color()));
+                color = shading_color;
+                light = 1;
+            }
         }
     } else {
         color = Vector3d(0, 0, 0);

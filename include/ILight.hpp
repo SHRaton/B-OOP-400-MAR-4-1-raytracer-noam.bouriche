@@ -15,13 +15,14 @@ namespace Raytracer {
 
 namespace Math {
     class Point3d;
+    class Vector3d;
 }
 
 class ILight {
     public:
         virtual ~ILight() = default;
-        virtual bool is_shadow(const Raytracer::Ray &ray) = 0;
+        virtual std::string get_name() = 0;
         virtual std::string get_color() = 0;
-        virtual double get_direction() = 0;
-        virtual Math::Point3d get_impact_point() = 0;
+        virtual Math::Point3d get_position() = 0;
+        virtual Math::Vector3d get_direction() = 0;
 };

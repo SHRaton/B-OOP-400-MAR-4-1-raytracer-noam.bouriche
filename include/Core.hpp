@@ -16,6 +16,7 @@
 #include <utility>
 #include <limits>
 #include <sstream>
+#include <algorithm>
 #include "Math.hpp"
 
 using namespace libconfig;
@@ -34,7 +35,8 @@ class Core {
         void parse_all();
         void parse_camera();
         void parse_primitives();
-        std::string shadow_gestion(int i);
+        void parse_lights();
+        std::string shadow_gestion(int closest_primitive, size_t i);
         std::string color_from_vector(Vector3d color);
         Vector3d vector_from_color(std::string color);
         Config cfg;
@@ -54,6 +56,8 @@ class Core {
 
         // Lights
         std::vector<std::unique_ptr<ILight>> _lights;
+        double ambiant_light;
+        double diffuse_light;
 };
 
 void raytracer(char **av);

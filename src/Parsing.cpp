@@ -92,8 +92,36 @@ void Core::parse_primitives()
     }
 }
 
+void Core::parse_lights()
+{
+    int z = 0;
+    int nb = (*root)["lights"].getLength();
+
+    while (z < nb) {
+        if (std::string((*root)["lights"][z].getName()) == "ambient") {
+            (*root)["lights"].lookupValue("ambient", ambiant_light);
+        }
+        if (std::string((*root)["lights"][z].getName()) == "diffuse") {
+            (*root)["lights"].lookupValue("diffuse", diffuse_light);
+        }
+        if (std::string((*root)["lights"][z].getName()) == "point") {
+            for (int i = 0; i < (*root)["lights"]["point"].getLength(); i++) {
+                int x, y, z;
+                (*root)["lights"]["point"][i].lookupValue("x", x);
+                (*root)["lights"]["point"][i].lookupValue("y", y);
+                (*root)["lights"]["point"][i].lookupValue("z", z);
+                Point3d coo(x, y, z);
+                auto light = make_unique<PointLight>(coo);
+                _lights.push_back(std::move(light));
+            }
+        }
+        z++;
+    }
+}
+
 void Core::parse_all()
 {
     parse_camera();
     parse_primitives();
+    parse_lights();
 }
